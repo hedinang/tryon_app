@@ -1,0 +1,18 @@
+<LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView
+            android:layout_weight="1"
+            android:id="@+id/cloth_item_left"
+            android:src="@mipmap/cloth_foreground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    <ImageView
+            android:layout_weight="1"
+            android:id="@+id/cloth_item_right"
+            android:src="@mipmap/cloth_foreground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+</LinearLayout>
