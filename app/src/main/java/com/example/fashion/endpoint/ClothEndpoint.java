@@ -1,5 +1,6 @@
 package com.example.fashion.endpoint;
 
+import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -11,8 +12,8 @@ import java.util.Map;
 
 public interface ClothEndpoint {
     @GET("/cloth/page/{page}")
-    Call<Map> getPage(@Path("page") int page);
+    Observable<Map<String, List<String>>> getPage(@Path("page") int page);
 
     @GET("/cloths/{id}")
-    Call<ResponseBody> getCloth(@Path("id") String id);
+    Observable<ResponseBody> getCloth(@Path("id") String id);
 }

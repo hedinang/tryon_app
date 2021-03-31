@@ -8,8 +8,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.fashion.adapter.ClothsAdapter;
 import com.example.fashion.endpoint.ClothEndpoint;
+import com.example.fashion.service.ClothService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,58 +34,19 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class ClothActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cloth);
         final Intent intent = new Intent(this, MainActivity.class);
-        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(60, TimeUnit.SECONDS)
-                .connectTimeout(60, TimeUnit.SECONDS)
-                .build();
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.131:5000")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(okHttpClient)
-                .build();
-        final ClothEndpoint clothEndpoint = retrofit.create(ClothEndpoint.class);
-        Call<Map> call = clothEndpoint.getPage(1);
         final Context context = this.getApplicationContext();
-        call.enqueue(new Callback<Map>() {
-            @Override
-            public void onResponse(Call<Map> call, Response<Map> response) {
-                Map list = response.body();
-                ArrayList<String> cloths = (ArrayList<String>) list.get("cloths");
-                ClothsAdapter clothsAdapter = new ClothsAdapter(cloths,clothEndpoint);
-                RecyclerView recyclerView = findViewById(R.id.recycle);
-                recyclerView.setAdapter(clothsAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            }
+        RecyclerView recyclerView = findViewById(R.id.recycle);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ClothsAdapter clothsAdapter = new ClothsAdapter();
+        recyclerView.setAdapter(clothsAdapter);
+        ClothService clothService = new ClothService();
+        clothService.getPage(1, clothsAdapter);
 
-            @Override
-            public void onFailure(Call<Map> call, Throwable t) {
-                System.out.println("loi connect");
-            }
-        });
-//        call.enqueue(new Callback<Map>() {
-//            @Override
-//            public void onResponse(Call<Map> call, Response<Map> response) {
-//                Map list = response.body();
-//                ArrayList<String> cloths = (ArrayList<String>) list.get("cloths");
-//                ClothsAdapter clothsAdapter = new ClothsAdapter(cloths);
-//                RecyclerView recyclerView = findViewById(R.id.recycle);
-//                recyclerView.setAdapter(clothsAdapter);
-//                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Map> call, Throwable t) {
-//                System.out.println("loi connect");
-//            }
-//        });
     }
 }
