@@ -12,6 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <ImageView
+                android:id="@+id/person"
                 android:layout_weight="1"
                 android:src="@mipmap/person_foreground"
                 android:layout_width="wrap_content"
@@ -24,13 +25,15 @@
                 android:layout_height="match_parent"/>
     </LinearLayout>
     <ImageView
+            android:id="@+id/result"
             android:layout_weight="5"
             android:src="@mipmap/person_foreground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     <Button
+            android:id="@+id/tryFashion"
             android:layout_weight="1"
-            android:text="Kết quả"
+            android:text="Thử"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

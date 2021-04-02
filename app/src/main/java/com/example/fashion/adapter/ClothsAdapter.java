@@ -1,76 +1,64 @@
 package com.example.fashion.adapter;
 
 import android.content.Context;
-
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.fashion.MainActivity;
 import com.example.fashion.R;
-import com.example.fashion.service.ClothService;
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class ClothsAdapter extends
         RecyclerView.Adapter<ClothsAdapter.ViewHolder> {
-    private List<String> listCloths;
-    private boolean isRound;
-    ClothService clothService = new ClothService();
+    private List<Bitmap> listCloths;
+    List<String> listPaths;
+    Context context;
 
-    public ClothsAdapter() {
-        this.listCloths = new ArrayList<>();
-
-    }
-
-    public void setData(List<String> listCloths) {
+    public ClothsAdapter(Context context, List<Bitmap> listCloths,List<String> listPaths) {
         this.listCloths = listCloths;
-        if (listCloths.size() / 2 * 2 < listCloths.size())
-            this.isRound = true;
-
+        this.listPaths = listPaths;
+        this.context = context;
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView imageViewLeft;
-        public ImageView imageViewRight;
+        public ImageView imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            imageViewLeft = itemView.findViewById(R.id.cloth_item_left);
-            imageViewRight = itemView.findViewById(R.id.cloth_item_right);
+            imageView = itemView.findViewById(R.id.itemCloth);
+
         }
+
     }
 
     @Override
     public ClothsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.activity_cloth, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        View view = LayoutInflater.from(context)
+                .inflate(R.layout.fragment_cloth_item, parent, false);
+        return new ViewHolder(view);
     }
 
 
     @Override
     public void onBindViewHolder(ClothsAdapter.ViewHolder holder, int position) {
-        String clothLeft = listCloths.get(position * 2);
-        try {
-            clothService.showCloth(clothLeft, holder.imageViewLeft);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (!isRound) {
-            String clothRight = listCloths.get(position * 2 + 1);
-            try {
-                clothService.showCloth(clothRight, holder.imageViewRight);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        Bitmap clothLeft = listCloths.get(position);
+        holder.imageView.setImageBitmap(clothLeft);
+        holder.imageView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.putExtra("cloth", clothLeft);
+            intent.putExtra("path",listPaths.get(position));
+            context.startActivity(intent);
+        });
     }
 
     @Override
     public int getItemCount() {
-        return listCloths.size() / 2;
+        return listCloths.size();
     }
 }
